@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('presensi', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Relasi ke tabel users
+            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Relasi ke tabel users
             $table->date('tanggal_presensi');
             $table->time('jam_masuk');
             $table->time('jam_keluar')->nullable(); // Jam keluar bisa jadi null jika baru absen masuk

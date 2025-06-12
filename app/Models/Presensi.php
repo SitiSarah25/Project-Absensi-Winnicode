@@ -12,12 +12,13 @@ class Presensi extends Model
     protected $table = 'presensi';
 
     protected $fillable = [
-        'user_id',
-        'tanggal_presensi',
-        'jam_masuk',
-        'jam_keluar',
-        'lokasi',
-    ];
+    'user_id',
+    'tanggal_presensi',
+    'jam_masuk',
+    'jam_keluar',
+    'lokasi_masuk',
+    'lokasi_keluar',
+];
 
     // Casting: tanggal sebagai date, jam masuk dan keluar sebagai format jam
     protected $casts = [

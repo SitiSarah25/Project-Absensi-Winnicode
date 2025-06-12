@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KantorController;
 use App\Http\Controllers\PenggunaController;
+use App\Http\Controllers\AdminPresensiController;
 
 // =========================
 // Route Awal (Login Page)
@@ -41,19 +42,12 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Dashboard admin
     Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
 
-    // Presensi admin (jika hanya view statis)
-    Route::get('/admin/presensi', function () {
-        return view('admin.presensi');
-    })->name('admin.presensi');
+    // Presensi admin (dari controller)
+    Route::get('/admin/presensi', [AdminPresensiController::class, 'adminPresensi'])->name('admin.presensi');
+
 
     // ========== LOKASI KANTOR (CRUD) ==========
-    // Removed the direct view route to avoid undefined variable error
-    // Route::get('/admin/kantor', function () {
-    //     return view('admin.office.kantor'); // opsional, kalau form statis
-    // })->name('admin.kantor');
-    
     Route::get('/admin/kantor', [KantorController::class, 'index'])->name('admin.kantor');
-
     Route::get('/admin/office/create', [KantorController::class, 'create'])->name('admin.office.create');
     Route::post('/admin/office/store', [KantorController::class, 'store'])->name('admin.office.store');
     Route::get('/admin/office/{id}/edit', [KantorController::class, 'edit'])->name('admin.office.edit');
@@ -62,6 +56,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
     // ========== PENGGUNA / USER (CRUD) ==========
     Route::get('/admin/pengguna', [PenggunaController::class, 'index'])->name('admin.pengguna');
+    Route::get('/admin/user/pengguna', [PenggunaController::class, 'index'])->name('admin.user.pengguna');
     Route::get('/admin/user/create', [PenggunaController::class, 'create'])->name('admin.user.create');
     Route::post('/admin/user/store', [PenggunaController::class, 'store'])->name('admin.user.store');
     Route::get('/admin/user/{id}/edit', [PenggunaController::class, 'edit'])->name('admin.user.edit');

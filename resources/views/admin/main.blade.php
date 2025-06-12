@@ -62,7 +62,7 @@
     <div class="row">
         <!-- Sidebar -->
         <div class="col-md-3 col-lg-2 p-3 sidebar">
-            <h5 class="fw-bold mb-4">ngabsen <span style="color: #fbb03b;">in</span></h5>
+            <h5 class="fw-bold mb-4 text-center">ngabsen <span style="color: #fbb03b;">in</span></h5>
 
             <a href="{{ route('admin.dashboard') }}" class="d-block p-2 rounded mb-2 {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                 <i class="bi bi-house-door-fill me-2"></i> Beranda

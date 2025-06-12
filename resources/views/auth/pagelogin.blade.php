@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ngabsen.in - Login</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
   <style>
     body {
@@ -142,7 +143,7 @@
   <div class="left-panel">
     <h4>Yuk Absen!</h4>
     <h1>Halo, Pejuang<br>Tepat Waktu</h1>
-    <p><strong style="color: #142D70;">Tepat waktu</strong> mencerminkan tanggung jawab. 
+    <p><strong style="color: #142D70;">Tepat waktu</strong> mencerminkan tanggung jawab.
     Silakan lakukan absensi untuk memulai hari kerja Anda.</p>
   </div>
 
@@ -163,17 +164,17 @@
         <label for="email" class="form-label">Email</label>
         <input type="email" name="email" class="form-control" id="email" placeholder="Masukkan Email" required value="{{ old('email') }}">
       </div>
-      <div class="mb-3">
+
+      <div class="mb-3 position-relative">
         <label for="password" class="form-label">Password</label>
-        <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password" required>
+        <div class="input-group">
+          <input type="password" name="password" class="form-control" id="password" placeholder="Masukkan Password" required>
+          <span class="input-group-text bg-white">
+            <i class="bi bi-eye-slash" id="togglePassword" style="cursor: pointer;"></i>
+          </span>
+        </div>
       </div>
-      <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" name="remember" id="remember"
-        {{ old('remember') ? 'checked' : '' }}>
-        <label class="form-check-label" for="remember">
-          Ingat Saya
-        </label>
-      </div>
+
       <button type="submit" class="btn btn-warning">Masuk</button>
     </form>
   </div>
@@ -185,7 +186,17 @@
   </svg>
 </div>
 
-showLoginForm.
+<script>
+  const toggle = document.getElementById('togglePassword');
+  const password = document.getElementById('password');
+
+  toggle.addEventListener('click', function () {
+    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    password.setAttribute('type', type);
+    this.classList.toggle('bi-eye');
+    this.classList.toggle('bi-eye-slash');
+  });
+</script>
 
 </body>
 </html>

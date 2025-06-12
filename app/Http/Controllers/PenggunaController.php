@@ -8,11 +8,19 @@ use Illuminate\Support\Facades\Hash;
 
 class PenggunaController extends Controller
 {
-    public function index()
-    {
-        $users = User::all();
-        return view('admin.user.pengguna', compact('users'));
-    }
+   public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    $users = \App\Models\User::when($search, function ($query, $search) {
+            return $query->where('nama', 'like', "%{$search}%")
+                         ->orWhere('email', 'like', "%{$search}%");
+        })
+        ->orderBy('nama')
+        ->paginate(5);
+
+    return view('admin.user.pengguna', compact('users', 'search'));
+}
 
     public function create()
     {
