@@ -1,13 +1,22 @@
 @extends('admin.main')
 
 @section('content')
-<div class="container-fluid px-4">
-    <h4 class="fw-bold mb-4">Pengguna</h4>
+<div class="container-fluid px-3">
+    <h4 class="fw-bold mb-4">Daftar Pengguna</h4>
 
-    <div class="d-flex justify-content-between mb-3 align-items-center">
-        <form method="GET" action="{{ route('admin.user.pengguna') }}" class="d-flex">
-            <input type="text" name="search" class="form-control me-2 shadow-sm" placeholder="Cari nama/email" value="{{ request('search') }}">
-            <button type="submit" class="btn btn-outline-primary">Cari</button>
+    {{-- Form Cari & Tombol Tambah --}}
+    <div class="d-flex justify-content-between flex-wrap gap-2 mb-3 align-items-center">
+        <form method="GET" action="{{ route('admin.user.pengguna') }}" style="max-width: 350px;" class="w-100 position-relative">
+            <input type="text"
+                name="search"
+                class="form-control shadow-sm ps-4 pe-5 rounded-pill"
+                placeholder="Cari nama atau email..."
+                value="{{ request('search') }}"
+                style="height: 42px; border: 1px solid #ced4da;">
+            <button type="submit"
+                    class="position-absolute top-50 end-0 translate-middle-y me-3 btn p-0 border-0 bg-transparent">
+                <i class="bi bi-search text-primary fs-5"></i>
+            </button>
         </form>
 
         <a href="{{ route('admin.user.create') }}" class="btn btn-primary shadow-sm">
@@ -15,48 +24,79 @@
         </a>
     </div>
 
-    <div class="table-responsive">
-        <table class="table mb-0" style="border-collapse: collapse; width: 100%; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;">
-            <thead style="background-color: #e9f0fb; color: #333; border-bottom: 2px solid #a0b9e8;">
-                <tr class="text-center">
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Nama</th>
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Email</th>
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Posisi</th>
-                    <th style="padding: 12px 15px;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($users as $user)
-                <tr class="text-center" style="border-top: 1px solid #dee2e6;">
-                    <td class="text-start ps-4" style="border-right: 1px solid #dee2e6; padding: 12px 15px;">{{ $user->nama }}</td>
-                    <td class="text-start" style="border-right: 1px solid #dee2e6; padding: 12px 15px;">{{ $user->email }}</td>
-                    <td style="border-right: 1px solid #dee2e6; padding: 12px 15px;">{{ ucfirst($user->role) }}</td>
-                    <td style="padding: 12px 15px;">
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-sm btn-outline-secondary" title="Edit">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
-                            <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="4" class="text-center text-muted py-4">Data tidak ditemukan.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    {{-- Tabel --}}
+    <div class="card shadow-sm rounded-4 p-4 border-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle custom-table mb-0">
+                <thead>
+                    <tr class="text-center">
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>Posisi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($users as $user)
+                    <tr class="text-center">
+                        <td class="fw-semibold text-center ps-4">{{ $user->nama }}</td>
+                        <td class="text-center">{{ $user->email }}</td>
+                        <td>
+                            <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                                {{ ucfirst($user->role) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex justify-content-center gap-2">
+                                {{-- Edit --}}
+                                <a href="{{ route('admin.user.edit', $user->id) }}"
+                                   class="btn btn-sm btn-outline-success"
+                                   title="Edit Pengguna">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+
+                                {{-- Hapus --}}
+                                <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus?');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Hapus Pengguna">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Data tidak ditemukan.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    {{-- Pagination --}}
     <div class="mt-3 d-flex justify-content-center">
         {{ $users->withQueryString()->links('pagination::bootstrap-5') }}
     </div>
 </div>
+
+{{-- Style --}}
+<style>
+    .custom-table thead {
+        background-color: #e9f0fb;
+        color: #333;
+        border-bottom: 2px solid #a0b9e8;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+</style>
 @endsection

@@ -1,41 +1,58 @@
 @extends('layout.main')
 
 @section('content')
-<div class="container">
-    {{-- <div class="mb-3">
-        <a href="{{ route('presensi.index') }}" class="btn btn-secondary">
-            &larr; Kembali
-        </a>
-    </div> --}}
+<div class="container-fluid px-3">
+    <h4 class="fw-bold mb-4">Presensi Hari Ini</h4>
 
-    <div class="card shadow-sm rounded-4 p-4" style="max-width: 500px; margin: auto;">
-        <h5 class="fw-bold mb-3 text-center">Informasi Pegawai</h5>
+    <div class="card shadow-sm border-0 rounded-4 p-4" >
+        <form method="POST" action="{{ route('presensi.store') }}"  class="row g-3">
+            @csrf
 
-        <div style="background-color: rgba(33, 150, 243, 0.1);" class="rounded-3 p-3 mb-3">
-            <p class="mb-1"><strong>Nama :</strong> {{ Auth::user()->nama ?? Auth::user()->name }}</p>
-            <p class="mb-1"><strong>Jam Kerja :</strong> 09.00 - 17.00</p>
-            <p class="mb-0"><strong>Kantor :</strong> Kantor Utama</p>
-        </div>
-
-        <div class="d-flex justify-content-between mb-3">
-            <div style="background-color: rgba(33, 150, 243, 0.1); flex: 1; margin-right: 5px;" class="rounded-3 p-2 text-center">
-                <strong>Jam Masuk</strong>
-                <div id="displayJamMasuk">{{ $jamMasuk ?? '- - : - - : - -' }}</div>
+            {{-- Informasi Pengguna --}}
+            <div class="col">
+                <div class="rounded-3 mb-1 p-3 rounded shadow-sm" style="background-color: rgba(33, 150, 243, 0.1);">
+                    <p class="mb-1"><strong>Nama:</strong> {{ Auth::user()->nama ?? Auth::user()->name }}</p>
+                    <p class="mb-1"><strong>Jam Kerja:</strong> 09.00 - 17.00</p>
+                    <p class="mb-0"><strong>Kantor:</strong> Kantor Utama</p>
+                </div>
             </div>
-            <div style="background-color: rgba(33, 150, 243, 0.1); flex: 1; margin-left: 5px;" class="rounded-3 p-2 text-center">
-                <strong>Jam Keluar</strong>
-                <div id="displayJamKeluar">{{ $jamKeluar ?? '- - : - - : - -' }}</div>
+
+            {{-- Jam Masuk & Keluar --}}
+            <div class="d-flex flex-wrap gap-3 mb-3">
+                <div class="col">
+                    <div class="rounded-3 p-3 rounded shadow-sm text-center h-100" style="background-color: rgba(33, 150, 243, 0.1);">
+                        <strong >Jam Masuk</strong>
+                        <div class="mt-2 fs-6" id="displayJamMasuk">
+                            {{ $jamMasuk ?? '- - : - - : - -' }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="rounded-3 p-3 rounded shadow-sm text-center h-100" style="background-color: rgba(33, 150, 243, 0.1);">
+                        <strong>Jam Keluar</strong>
+                        <div class="mt-2 fs-6" id="displayJamKeluar">
+                            {{ $jamKeluar ?? '- - : - - : - -' }}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <h6 class="fw-bold mb-2">Presensi</h6>
+            {{-- Peta Lokasi --}}
+            <div class="mb-1">
+                <label class="form-label fw-semibold">Peta Lokasi</label>
+                <div id="map" style="height: 250px;" class="rounded shadow-sm border"></div>
+            </div>
 
-        <div id="map" style="height: 250px;" class="rounded mb-3"></div>
-
-        <div class="d-flex justify-content-between">
-            <button id="lokasiBtn" class="btn btn-primary w-50 me-2">Klik Lokasi</button>
-            <button id="presensiBtn" class="btn btn-danger w-50 ms-2" disabled>Kirim Presensi</button>
-        </div>
+            {{-- Tombol Aksi --}}
+            <div class="col-12 d-flex flex-wrap gap-2 justify-content-between pt-3">
+                <button type="button" id="lokasiBtn" class="btn btn-light border shadow-sm">
+                    <i class="bi bi-geo-alt me-1"></i> Klik Lokasi
+                </button>
+                <button type="button" id="presensiBtn" class="btn btn-primary shadow-sm">
+                    <i class="bi bi-send me-1"></i> Kirim Presensi
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -49,7 +66,6 @@ let userMarker = null;
 let userCircle = null;
 
 let state = "{{ $jamMasuk !== '-' ? ($jamKeluar !== '-' ? 'complete' : 'jam_masuk_done') : 'initial' }}";
-
 let lokasi = {};
 let waktu = {};
 
@@ -68,7 +84,9 @@ document.getElementById("lokasiBtn").addEventListener("click", function () {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
             const now = new Date();
-            const timeFormatted = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const timeFormatted = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
 
             if (userMarker) map.removeLayer(userMarker);
             if (userCircle) map.removeLayer(userCircle);
@@ -142,4 +160,7 @@ function kirimPresensi(data) {
     });
 }
 </script>
+
+{{-- Bootstrap Icons --}}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 @endsection

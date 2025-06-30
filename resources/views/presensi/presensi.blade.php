@@ -1,7 +1,7 @@
 @extends('layout.main')
 
 @section('content')
-<div class="container-fluid px-4">
+<div class="container-fluid px-3">
     <h4 class="fw-bold mb-4">Presensi</h4>
 
     <div class="d-flex justify-content-end mb-3">
@@ -10,42 +10,110 @@
         </a>
     </div>
 
-    <div class="table-responsive">
-        <table class="table mb-0" style="border-collapse: collapse; width: 100%; border: 1px solid #dee2e6; border-radius: 8px; overflow: hidden;">
-           <thead style="background-color: #e9f0fb; color: #333; border-bottom: 2px solid #a0b9e8;">
-                <tr class="text-center">
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Tanggal</th>
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Nama</th>
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Jam Masuk</th>
-                    <th style="padding: 12px 15px; border-right: 1px solid #dee2e6;">Jam Keluar</th>
-                    <th style="padding: 12px 15px;">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($presensis as $presensi)
-                <tr class="text-center" style="border-top: 1px solid #dee2e6;">
-                    <td style="padding: 12px 15px;">{{ \Carbon\Carbon::parse($presensi->tanggal_presensi)->translatedFormat('d F Y') }}</td>
-                    <td style="padding: 12px 15px;">{{ $presensi->user->nama ?? 'N/A' }}</td>
-                    <td style="padding: 12px 15px;">{{ $presensi->jam_masuk ? \Carbon\Carbon::parse($presensi->jam_masuk)->setTimezone('Asia/Jakarta')->format('H:i:s') : '-' }}</td>
-                    <td style="padding: 12px 15px;">{{ $presensi->jam_keluar ? \Carbon\Carbon::parse($presensi->jam_keluar)->setTimezone('Asia/Jakarta')->format('H:i:s') : '- - : - - : - -' }}</td>
-                    <td style="padding: 12px 15px;" class="{{ ($presensi->jam_masuk && $presensi->jam_keluar) ? 'text-success' : 'text-warning' }} fw-bold">
-                        @if ($presensi->jam_masuk && $presensi->jam_keluar)
-                            Hadir
-                        @else
-                            Belum Lengkap
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="5" class="text-center text-muted py-4">Belum ada data presensi.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    {{-- Tabel Presensi --}}
+    <div class="card shadow-sm rounded-4 p-4 border-0">
+
+        {{-- Desktop Table --}}
+        <div class="table-responsive d-none d-md-block">
+            <table class="table table-hover mb-0 custom-table">
+                <thead>
+                    <tr class="text-center">
+                        <th>Tanggal</th>
+                        <th>Nama</th>
+                        <th>Jam Masuk</th>
+                        <th>Jam Keluar</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($presensis as $presensi)
+                    <tr class="text-center">
+                        <td>{{ \Carbon\Carbon::parse($presensi->tanggal_presensi)->translatedFormat('d F Y') }}</td>
+                        <td>{{ $presensi->user->nama ?? 'N/A' }}</td>
+                        <td>{{ $presensi->jam_masuk ? \Carbon\Carbon::parse($presensi->jam_masuk)->format('H:i:s') : '-' }}</td>
+                        <td>{{ $presensi->jam_keluar ? \Carbon\Carbon::parse($presensi->jam_keluar)->format('H:i:s') : '-' }}</td>
+                        <td>
+                            @if ($presensi->jam_masuk && $presensi->jam_keluar)
+                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Hadir</span>
+                            @elseif ($presensi->jam_masuk)
+                                <span class="badge text-dark" style="background-color: #fbb03b;"><i class="bi bi-exclamation-triangle me-1"></i>Belum Lengkap</span>
+                            @else
+                                <span class="badge bg-secondary"><i class="bi bi-x-circle me-1"></i>Belum Absen</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Belum ada data presensi.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Mobile Cards --}}
+        <div class="d-block d-md-none mt-3">
+            @forelse ($presensis as $presensi)
+            <div class="card shadow-sm mb-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="mb-1 fw-semibold">{{ $presensi->user->nama ?? 'N/A' }}</h6>
+                            <p class="text-muted mb-2" style="font-size: 0.85rem;">
+                                {{ \Carbon\Carbon::parse($presensi->tanggal_presensi)->translatedFormat('d M Y') }}
+                            </p>
+                            <div class="small">
+                                <span class="me-3">
+                                    <i class="bi bi-box-arrow-in-right me-1"></i>{{ $presensi->jam_masuk ? \Carbon\Carbon::parse($presensi->jam_masuk)->format('H:i') : '-' }}
+                                </span>
+                                <span>
+                                    <i class="bi bi-box-arrow-left me-1"></i>{{ $presensi->jam_keluar ? \Carbon\Carbon::parse($presensi->jam_keluar)->format('H:i') : '-' }}
+                                </span>
+                            </div>
+                        </div>
+                        <div>
+                            @if ($presensi->jam_masuk && $presensi->jam_keluar)
+                                <span class="badge bg-success">Hadir</span>
+                            @elseif ($presensi->jam_masuk)
+                                <span class="badge bg-warning text-dark">Belum Lengkap</span>
+                            @else
+                                <span class="badge bg-secondary">Belum Absen</span>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @empty
+            <div class="text-center text-muted py-4">Belum ada data presensi.</div>
+            @endforelse
+        </div>
+    </div>
+
+    {{-- Pagination --}}
+    <div class="mt-3 d-flex justify-content-center">
+        {{ $presensis->withQueryString()->links('pagination::bootstrap-5') }}
     </div>
 </div>
 
-<!-- Bootstrap Icons (jika belum ada) -->
+{{-- Bootstrap Icons --}}
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+{{-- Custom Table Styling --}}
+<style>
+    .custom-table thead {
+        background-color: #e9f0fb;
+        color: #333;
+        border-bottom: 2px solid #a0b9e8;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .card-body span i {
+        color: #0f2c63;
+    }
+</style>
 @endsection

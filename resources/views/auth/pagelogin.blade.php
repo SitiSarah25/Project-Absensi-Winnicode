@@ -18,7 +18,7 @@
     }
 
     .navbar-brand span {
-      color: #F6AF45;
+      color: #fbb03b;
     }
 
     .container-flex {
@@ -41,7 +41,7 @@
 
     .left-panel h4 {
       font-weight: 700;
-      color: #F6AF45;
+      color: #fbb03b;
     }
 
     .left-panel h1 {
@@ -74,10 +74,16 @@
       margin-bottom: 30px;
     }
 
-    .btn-warning {
+    .btn-submit {
       width: 100%;
       font-weight: 600;
-      background-color: #F6AF45;
+      background-color: #fbb03b;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: #e09b25; /* Lebih gelap dari #fbb03b */
     }
 
     .form-check-label {
@@ -102,20 +108,22 @@
     @media (max-width: 992px) {
       .container-flex {
         flex-direction: column;
-        padding: 30px 20px;
+        align-items: center;
+        padding: 20px;
       }
 
       .left-panel {
         width: 100%;
         padding: 20px;
-        padding-left: 0;
+        padding-left: 20px;
+        padding-right: 20px;
         text-align: center;
       }
 
       .right-panel {
-        transform: none;
+        transform: none !important;
         margin-top: 30px;
-        max-width: 100%;
+        max-width: 90%;
       }
 
       .left-panel h1 {
@@ -124,22 +132,57 @@
 
       .left-panel p {
         font-size: 16px;
-        margin: auto;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
+
+    @media (max-width: 576px) {
+      .left-panel h1 {
+        font-size: 1.8rem;
+      }
+
+      .left-panel p {
+        font-size: 14px;
+      }
+
+      .right-panel {
+        padding: 20px 15px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn-submit {
+        font-size: 0.95rem;
+      }
+
+      .form-control {
+        font-size: 0.95rem;
+      }
+
+      .input-group-text i {
+        font-size: 1.1rem;
+      }
+
+      .navbar-brand {
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
   </style>
 </head>
 <body>
 
-<nav class="navbar navbar-light mb-4">
-  <div class="container">
-    <a class="navbar-brand fw-bold fs-4" style="color: #142D70;" href="#">
+<nav class="navbar navbar-light bg-transparent py-3">
+  <div class="container px-3">
+    <a class="navbar-brand fw-bold fs-4 m-0" style="color: #142D70;" href="#">
       ngabsen<span>.in</span>
     </a>
   </div>
 </nav>
 
-<div class="container-flex">
+<div class="container-flex mt-4">
   <div class="left-panel">
     <h4>Yuk Absen!</h4>
     <h1>Halo, Pejuang<br>Tepat Waktu</h1>
@@ -174,8 +217,7 @@
           </span>
         </div>
       </div>
-
-      <button type="submit" class="btn btn-warning">Masuk</button>
+      <button type="submit" class="btn btn-submit shadow-sm">Masuk</button>
     </form>
   </div>
 </div>
